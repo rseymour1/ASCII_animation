@@ -3,6 +3,8 @@ import os
 import sys
 from urllib.parse import urlencode
 
+from gif_split import split_gif_to_frames
+
 class GiphyDownloader:
     def __init__(self, api_key):
         """Initialize with your Giphy API key."""
@@ -62,26 +64,27 @@ class GiphyDownloader:
 # Example usage
 def main():
 
+    search_term = sys.argv[1]
+    gif_limit = sys.argv[2]
     # Replace with your actual API key
     api_key = open("giphy_api_key.txt").readline().strip()
-    print(api_key)
     downloader = GiphyDownloader(api_key)
     
     # Create downloads directory if it doesn't exist
-    if not os.path.exists('downloads'):
-        os.makedirs('downloads')
+    if not os.path.exists(f'downloads/{search_term}'):
+        os.makedirs(f'downloads/{search_term}')
     
     # Search for GIFs
-    search_term = "cats"
-    results = downloader.search_gifs(search_term, limit=3)
+    results = downloader.search_gifs(search_term, limit=gif_limit)
     
     # Download each GIF
     for i, gif in enumerate(results):
         gif_id = gif['id']
-        save_path = f"downloads/gif_{i}.gif"
+        save_path = f"downloads/{search_term}/gif_{i}.gif"
         print(f"Downloading GIF {i+1}...")
         downloader.download_gif(gif_id, save_path)
         print(f"Saved to {save_path}")
+        split_gif_to_frames(save_path, os.path.splitext(save_path)[0])
 
 if __name__ == "__main__":
     main()

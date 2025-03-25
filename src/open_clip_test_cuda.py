@@ -1,17 +1,23 @@
-#pip install open_clip_torch
+# Ensure necessary packages are installed
 import subprocess
 import sys
 
 def install_package(package):
     subprocess.check_call([sys.executable, "-m", "pip", "install", package])
+
 try:
-    install_package("open_clip_torch")  # Replace "requests" with the package you need
+    install_package("open_clip_torch")
     install_package("torch")
-    install_package("PIL")
+    install_package("torchvision")
+    install_package("Pillow")
+    install_package("requests")
 except subprocess.CalledProcessError:
     pass
 
 import open_clip
+import torch
+from PIL import Image
+import requests
 
 model, preprocess = open_clip.create_model_from_pretrained('hf-hub:laion/CLIP-ViT-g-14-laion2B-s12B-b42K')
 tokenizer = open_clip.get_tokenizer('hf-hub:laion/CLIP-ViT-g-14-laion2B-s12B-b42K')

@@ -5,7 +5,7 @@ import sys
 
 def install_package(package):
     subprocess.check_call([sys.executable, "-m", "pip", "install", package])
-
+'''
 try:
     install_package("open_clip_torch")
     install_package("torch")
@@ -14,52 +14,78 @@ try:
     install_package("requests")
 except subprocess.CalledProcessError:
     pass
-
+'''
 import open_clip
 import torch
 from PIL import Image
-import requests
-def run_open_clip(image_path: str, label_list: list):
-    # Check if MPS (Metal Performance Shaders) is available
-    device = torch.device("mps" if torch.backends.mps.is_available() else "cpu")
-    cpu_device = torch.device("cpu")  # Keep text processing on CPU
-    print(f"Using device for image: {device}")
-    print(f"Using device for text: {cpu_device}")
+import torch.nn.functional as F
+#import requests
 
-    # Load the model and tokenizer
-    model, preprocess = open_clip.create_model_from_pretrained('hf-hub:laion/CLIP-ViT-g-14-laion2B-s12B-b42K')
-    tokenizer = open_clip.get_tokenizer('hf-hub:laion/CLIP-ViT-g-14-laion2B-s12B-b42K')
 
-    # Move model to MPS (Apple GPU)
-    model.to(device)
+# Check if MPS (Metal Performance Shaders) is available
+device = torch.device("mps" if torch.backends.mps.is_available() else "cpu")
+cpu_device = torch.device("cpu")  # Keep text processing on CPU
+print(f"Using device for image: {device}")
+print(f"Using device for text: {cpu_device}")
 
-    # Load and preprocess image
-    url = 'http://images.cocodataset.org/val2017/000000039769.jpg'
-    image = Image.open(requests.get(url, stream=True).raw)
-    image = preprocess(image).unsqueeze(0).to(device, dtype=torch.float32)
+# Load the CLIP model and tokenizer (frozen feature extractor)
+model, preprocess = open_clip.create_model_from_pretrained('hf-hub:laion/CLIP-ViT-g-14-laion2B-s12B-b42K')
+tokenizer = open_clip.get_tokenizer('hf-hub:laion/CLIP-ViT-g-14-laion2B-s12B-b42K')
+model.eval()  # Freeze the model; you can also set requires_grad=False for parameters if needed.
+model.to(cpu_device)
 
-    # Tokenize text (keep on CPU)
-    text = tokenizer(label_list).to(cpu_device)
 
-    # Compute features
+
+
+def clip_loss(generated_images, labels, true_label_index):
+    """
+    Compute a loss based on the CLIP model.
+
+    Args:
+        generated_images (Tensor): A batch of images (shape: [batch_size, C, H, W])
+                                   already preprocessed and on `device` (MPS).
+        labels (list of str): Candidate text labels.
+        true_label_index (int or Tensor): The index of the correct label.
+
+    Returns:
+        loss (Tensor): A scalar loss computed via cross entropy.
+    """
+    # Tokenize and encode the text on the CPU to avoid MPS issues
+    text_tokens = tokenizer(labels).to(cpu_device)  # Keep text on CPU
+
     with torch.no_grad():
-        # Image encoding on MPS
-        image_features = model.encode_image(image)
-
-        # Temporarily move model to CPU for text encoding
-        model.to(cpu_device)
-        text_features = model.encode_text(text)
-
-        # Move features back to MPS for computation
-        image_features = image_features.to(device)
-        text_features = text_features.to(device)
-
-        # Normalize features
-        image_features /= image_features.norm(dim=-1, keepdim=True)
+        text_features = model.encode_text(text_tokens)  # Runs on CPU
         text_features /= text_features.norm(dim=-1, keepdim=True)
 
-        # Compute similarity
-        text_probs = (100.0 * image_features @ text_features.T).softmax(dim=-1)
-    return text_probs.cpu().numpy()
+    # Move text features to MPS for similarity calculations
+    text_features = text_features.to(device)
+    model.to(device)
 
-print("Label probs:", run_open_clip("", ["a diagram", "a dog", "a cat"]))  # Move results to CPU for printing
+    # Encode the generated images (which are already on MPS)
+    image_features = model.encode_image(generated_images)
+    image_features /= image_features.norm(dim=-1, keepdim=True)
+
+    # Compute the similarity logits
+    logits = 100.0 * image_features @ text_features.T  # Shape: [batch_size, num_labels]
+    #print((100.0 * image_features @ text_features.T).softmax(dim=-1))
+
+    # Prepare the true labels tensor
+    true_label_tensor = torch.tensor([true_label_index], device=device, dtype=torch.long)
+
+    # Compute cross-entropy loss
+    loss = F.cross_entropy(logits, true_label_tensor)
+    return loss
+
+
+if __name__ == "__main__":
+    # Load and preprocess image
+    #url = 'http://images.cocodataset.org/val2017/000000039769.jpg'
+    #image = Image.open(requests.get(url, stream=True).raw)
+    image = Image.open("./Data/Image/castle_710.png")
+    image_tensor = preprocess(image).unsqueeze(0).to(device, dtype=torch.float32)
+
+    # Example labels and true label index.
+    candidate_labels = ["a bird", "a dog", "a cat", "a castle"]
+    true_label = 3
+
+    print("Label probs:", clip_loss(image_tensor, candidate_labels, true_label))  # Move results to CPU for printing

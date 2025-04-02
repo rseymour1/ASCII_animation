@@ -52,10 +52,11 @@ def clip_loss(generated_images, labels, true_label_index):
     """
     # Tokenize and encode the text on the CPU to avoid MPS issues
     text_tokens = tokenizer(labels).to(cpu_device)  # Keep text on CPU
+    model.to(cpu_device)
 
     with torch.no_grad():
         text_features = model.encode_text(text_tokens)  # Runs on CPU
-        text_features /= text_features.norm(dim=-1, keepdim=True)
+        text_features = text_features / text_features.norm(dim=-1, keepdim=True)
 
     # Move text features to MPS for similarity calculations
     text_features = text_features.to(device)
@@ -63,7 +64,7 @@ def clip_loss(generated_images, labels, true_label_index):
 
     # Encode the generated images (which are already on MPS)
     image_features = model.encode_image(generated_images)
-    image_features /= image_features.norm(dim=-1, keepdim=True)
+    image_features = image_features / image_features.norm(dim=-1, keepdim=True)
 
     # Compute the similarity logits
     logits = 100.0 * image_features @ text_features.T  # Shape: [batch_size, num_labels]

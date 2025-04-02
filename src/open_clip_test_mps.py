@@ -68,7 +68,7 @@ def clip_loss(generated_images, labels, true_label_index):
 
     # Compute the similarity logits
     logits = 100.0 * image_features @ text_features.T  # Shape: [batch_size, num_labels]
-    #print((100.0 * image_features @ text_features.T).softmax(dim=-1))
+    print((100.0 * image_features @ text_features.T).softmax(dim=-1))
 
     # Prepare the true labels tensor
     true_label_tensor = torch.tensor([true_label_index], device=device, dtype=torch.long)

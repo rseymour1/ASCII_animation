@@ -1,5 +1,4 @@
 # Ensure necessary packages are installed
-from clip2loss import create_loss_function
 import subprocess
 import sys
 
@@ -89,4 +88,4 @@ if __name__ == "__main__":
     candidate_labels = ["a bird", "a dog", "a cat", "a castle"]
     true_label = 3
 
-    print("Label probs:", clip_loss(image_tensor, candidate_labels, true_label))  # Move results to CPU for printing
+    print("Label probs:", clip_loss_mps(image_tensor, candidate_labels, true_label))  # Move results to CPU for printing

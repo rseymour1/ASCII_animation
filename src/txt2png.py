@@ -1,6 +1,7 @@
 from PIL import Image, ImageDraw, ImageFont
 
 courier_new_path = "/System/Library/Fonts/Supplemental/Courier New.ttf"
+courier_new_path_windows = r"C:\Windows\Fonts\cour.ttf"
 arial_path = "/System/Library/Fonts/Supplemental/arial.ttf"
 menlo_path = "/System/Library/Fonts/Menlo.ttc"
 def txt_file_to_png(txt_file, output_png, font_path=menlo_path, font_size=20, save=True):
@@ -37,7 +38,7 @@ def txt_file_to_png(txt_file, output_png, font_path=menlo_path, font_size=20, sa
     if save:
         img.save(output_png)
 
-def txt_to_png(txt, output_png=None, font_path=menlo_path, font_size=20, save=False):
+def txt_to_png(txt, output_png=None, font_path=courier_new_path_windows, font_size=20, save=False):
     # Load the Courier New font (monospaced)
     try:
         font = ImageFont.truetype(font_path, font_size)

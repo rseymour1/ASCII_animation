@@ -75,7 +75,7 @@ def clip_loss(generated_images, labels, true_label_index):
     # Compute cross-entropy loss
     loss = F.cross_entropy(logits, true_label_tensor)
     
-    return loss, probs
+    return loss#, probs
 
 if __name__ == "__main__":
     # Load and preprocess image

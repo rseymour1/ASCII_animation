@@ -1,5 +1,6 @@
-[ASCII art Repository](https://www.asciiart.eu/)
-[Amazing Star Wars ASCII Animation](https://www.asciimation.co.nz/index.php#)
+# ASCII Art Generator
+
+## Artist Attribution
 
 Unfortunately, I had to remove the artists' initials from the ASCII art pieces 
 to be able to train this model. 
@@ -22,9 +23,10 @@ As such, I'd like to recognize several of them here:
 - Seal
 - Mark Harms
 
+## Purpose
 
 This is the code made to create a neural network that has the purpose of 
-==generating novel, abstract ASCII art==. 
+**generating novel, abstract ASCII art**. 
 This is different than simple image-based ASCII art that takes an image and uses 
 ASCII characters to represent it. 
 Abstract ASCII art is not based on a specific image, but rather is simply trying 
@@ -92,3 +94,8 @@ i>i>~I>>~+>;::il:!_?~+~~[-+[)|xuxYdkCcvcnj/\\{}}?]}[?}})([<+?tUrtj[~/r/}]1?1Jhka
 III!_>I:ll,:,::,,I><:::,:",">__1|uuXvxcxfrux/||()\\)}]+<~+<l[ZQ||]li{?~I^IIi\mkbhdqZwmOOpmOn}~~i:lII
 ;I!I;I;:,:,,::,,I!~~!II;,,;;l>i!>~i:lI;lIi>>li~~-~>illI:;Il;;]+!!lii!;;I;;:l_1|/}!+><<i-){_::``,,:;!
 ```
+
+## Useful Links
+
+[ASCII art Repository](https://www.asciiart.eu/)
+[Amazing Star Wars ASCII Animation](https://www.asciimation.co.nz/index.php#)

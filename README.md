@@ -3,12 +3,28 @@
 
 Unfortunately, I had to remove the artists' initials from the ASCII art pieces 
 to be able to train this model. 
-As such, I'd like to recognize several of them here: Joan Stark(JGS), 
-Morfina(MRF), llizard(ejm), Donovan Bake, Hayley Jane Wakenshaw(HJW), 
-Linda Ball, sk, cjr, Shanaka Dias(SND), Maija Haavisto(MH), David Berner, 
-Max Strandberg, Veronica Karlsson, Keely, Seal, Mark Harms
+
+As such, I'd like to recognize several of them here: 
+- Joan Stark(JGS)
+- Morfina(MRF)
+- llizard(ejm)
+- Donovan Bake
+- Hayley Jane Wakenshaw(HJW)
+- Linda Ball
+- sk
+- cjr
+- Shanaka Dias(SND)
+- Maija Haavisto(MH)
+- David Berner
+- Max Strandberg
+- Veronica Karlsson
+- Keely
+- Seal
+- Mark Harms
+
+
 This is the code made to create a neural network that has the purpose of 
-generating novel, abstract ASCII art. 
+==generating novel, abstract ASCII art==. 
 This is different than simple image-based ASCII art that takes an image and uses 
 ASCII characters to represent it. 
 Abstract ASCII art is not based on a specific image, but rather is simply trying 
@@ -18,16 +34,13 @@ Here is the difference represented:
 
 Abstract
 ```
-{
  /\_/\
 ( o.o )
  > ^ <
-}
 ```
 
 Image-based
 ```
-{
 """"""""""""""""""""""""""`^^^"""""`````^^^^^"""""""""""^`;~-?+;""""""""""""""""""""""""""""""""""""
 """"""""""""""""""""""""^"lI;"`^^^""^^^^""""""""""^""^^':]|){|r~^"""""""""""""""""""""""""""""""""""
 """""""""""""""""""""""""")t){~l,`^``^^""^^^^^"^"^,"^"l]ft-ii?r]`"""""""""""""""""""""""""""""""""""
@@ -78,5 +91,4 @@ JLdoYvzvnuYb%&kdwLJLOYxvzYzvu|(jf?~>I,,^^^,";?1][>```^``^^`^",:;II::Ii[|zUUCmkkZ
 i>i>~I>>~+>;::il:!_?~+~~[-+[)|xuxYdkCcvcnj/\\{}}?]}[?}})([<+?tUrtj[~/r/}]1?1Jhka##apZ0LYn|11]+1}?--?
 III!_>I:ll,:,::,,I><:::,:",">__1|uuXvxcxfrux/||()\\)}]+<~+<l[ZQ||]li{?~I^IIi\mkbhdqZwmOOpmOn}~~i:lII
 ;I!I;I;:,:,,::,,I!~~!II;,,;;l>i!>~i:lI;lIi>>li~~-~>illI:;Il;;]+!!lii!;;I;;:l_1|/}!+><<i-){_::``,,:;!
-}
 ```
